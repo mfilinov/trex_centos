@@ -1,0 +1,38 @@
+- name: deploy trex
+  hosts: sdn1
+  tasks:
+    - name: Update repositories
+      yum:
+        name: "*"
+        state: latest
+      become: yes
+
+#    - name: install pack
+#      yum:
+#        name:
+#          - iperf3
+#        state: present
+#      become: yes
+
+    - name: Creates directory
+      file:
+        path: "/opt/trex"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      become: yes
+
+    - name: download trex
+      get_url:
+        url: http://trex-tgn.cisco.com/trex/release/latest
+        dest: /opt/trex/latest
+        mode: 0755
+      become: yes
+
+    - name: Extract trex
+      unarchive:
+        src: /opt/trex/latest
+        dest: /opt/trex/
+        remote_src: yes
+      become: yes
